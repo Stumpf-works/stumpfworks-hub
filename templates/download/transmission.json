@@ -1,0 +1,30 @@
+{
+  "id": "transmission",
+  "name": "Transmission",
+  "description": "Fast and lightweight BitTorrent client with web interface. Low resource usage.",
+  "icon": "⬇️",
+  "category": "download",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "CONFIG_PATH": "/var/lib/stumpfworks/transmission/config",
+    "DOWNLOADS_PATH": "/mnt/downloads",
+    "WATCH_PATH": "/mnt/downloads/watch",
+    "PUID": "1000",
+    "PGID": "1000",
+    "TZ": "Europe/Berlin"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  transmission:\n    image: lscr.io/linuxserver/transmission:latest\n    container_name: transmission\n    environment:\n      - PUID={{PUID}}\n      - PGID={{PGID}}\n      - TZ={{TZ}}\n      - USER=admin\n      - PASS=changeme\n    volumes:\n      - {{CONFIG_PATH}}:/config\n      - {{DOWNLOADS_PATH}}:/downloads\n      - {{WATCH_PATH}}:/watch\n    ports:\n      - 9091:9091\n      - 51413:51413\n      - 51413:51413/udp\n    restart: unless-stopped\n    labels:\n      - \"com.stumpfworks.app=transmission\"\n      - \"com.stumpfworks.category=download\"",
+  "requirements": {
+    "min_memory_mb": 256,
+    "min_disk_gb": 1,
+    "ports": [9091, 51413],
+    "notes": [
+      "Default username: admin, password: changeme (change after deployment)",
+      "Web interface available at http://your-ip:9091"
+    ]
+  },
+  "tags": ["download", "torrent", "bittorrent"],
+  "created_at": "2025-12-04T22:00:00Z",
+  "updated_at": "2025-12-04T22:00:00Z"
+}

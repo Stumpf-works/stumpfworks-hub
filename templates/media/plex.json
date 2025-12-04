@@ -1,0 +1,30 @@
+{
+  "id": "plex",
+  "name": "Plex Media Server",
+  "description": "Stream your media collection to any device. Supports hardware transcoding and offline sync.",
+  "icon": "🎬",
+  "category": "media",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "MEDIA_PATH": "/mnt/media",
+    "CONFIG_PATH": "/var/lib/stumpfworks/plex/config",
+    "TRANSCODE_PATH": "/var/lib/stumpfworks/plex/transcode",
+    "PUID": "1000",
+    "PGID": "1000",
+    "TZ": "Europe/Berlin"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  plex:\n    image: lscr.io/linuxserver/plex:latest\n    container_name: plex\n    network_mode: host\n    environment:\n      - PUID={{PUID}}\n      - PGID={{PGID}}\n      - TZ={{TZ}}\n      - VERSION=docker\n      - PLEX_CLAIM= # Optional: Get from https://www.plex.tv/claim\n    volumes:\n      - {{CONFIG_PATH}}:/config\n      - {{TRANSCODE_PATH}}:/transcode\n      - {{MEDIA_PATH}}:/media\n    devices:\n      - /dev/dri:/dev/dri # Hardware transcoding (Intel QuickSync)\n    restart: unless-stopped\n    labels:\n      - \"com.stumpfworks.app=plex\"\n      - \"com.stumpfworks.category=media\"",
+  "requirements": {
+    "min_memory_mb": 2048,
+    "min_disk_gb": 10,
+    "ports": [32400],
+    "notes": [
+      "Hardware transcoding requires Intel QuickSync or NVIDIA GPU",
+      "Get Plex Claim token from https://www.plex.tv/claim for initial setup"
+    ]
+  },
+  "tags": ["media", "streaming", "plex"],
+  "created_at": "2025-12-04T22:00:00Z",
+  "updated_at": "2025-12-04T22:00:00Z"
+}

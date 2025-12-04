@@ -1,0 +1,37 @@
+[Unit]
+Description=Stumpfworks Hub - Template and App Registry
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/stumpfworks-hub
+
+# Environment
+Environment="HUB_PORT=8090"
+Environment="HUB_TEMPLATES_DIR=/var/lib/stumpfworks-hub/templates"
+Environment="HUB_APPS_DIR=/var/lib/stumpfworks-hub/apps"
+Environment="HUB_CACHE_TTL=60"
+
+# Execute
+ExecStart=/opt/stumpfworks-hub/hub --port 8090 --templates /var/lib/stumpfworks-hub/templates --apps /var/lib/stumpfworks-hub/apps --cache-ttl 60
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=stumpfworks-hub
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/stumpfworks-hub /var/log/stumpfworks-hub
+
+[Install]
+WantedBy=multi-user.target
