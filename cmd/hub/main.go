@@ -80,6 +80,9 @@ func main() {
 		MaxAge:           300,
 	}))
 
+	// Landing page
+	r.Get("/", api.ServeLandingPage())
+
 	// Health check
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

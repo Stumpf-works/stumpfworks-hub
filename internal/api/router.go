@@ -2,12 +2,16 @@
 package api
 
 import (
+	_ "embed"
 	"encoding/json"
 	"net/http"
 
 	"github.com/Stumpf-works/stumpfworks-hub/internal/registry"
 	"github.com/go-chi/chi/v5"
 )
+
+//go:embed landing.html
+var landingPageHTML string
 
 // NewRouter creates the API router
 func NewRouter(reg *registry.Registry) http.Handler {
@@ -146,5 +150,14 @@ func handleGetApp(reg *registry.Registry) http.HandlerFunc {
 			return
 		}
 		respondSuccess(w, app)
+	}
+}
+
+// ServeLandingPage returns a handler for the landing page
+func ServeLandingPage() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(landingPageHTML))
 	}
 }
