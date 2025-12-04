@@ -1,0 +1,30 @@
+{
+  "id": "radarr",
+  "name": "Radarr",
+  "description": "Automated movie downloading and organization. Monitors RSS feeds and downloads via torrent/usenet.",
+  "icon": "🎥",
+  "category": "automation",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "CONFIG_PATH": "/var/lib/stumpfworks/radarr/config",
+    "MOVIES_PATH": "/mnt/media/movies",
+    "DOWNLOADS_PATH": "/mnt/downloads",
+    "PUID": "1000",
+    "PGID": "1000",
+    "TZ": "Europe/Berlin"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  radarr:\n    image: lscr.io/linuxserver/radarr:latest\n    container_name: radarr\n    environment:\n      - PUID={{PUID}}\n      - PGID={{PGID}}\n      - TZ={{TZ}}\n    volumes:\n      - {{CONFIG_PATH}}:/config\n      - {{MOVIES_PATH}}:/movies\n      - {{DOWNLOADS_PATH}}:/downloads\n    ports:\n      - 7878:7878\n    restart: unless-stopped\n    labels:\n      - \"com.stumpfworks.app=radarr\"\n      - \"com.stumpfworks.category=automation\"",
+  "requirements": {
+    "min_memory_mb": 512,
+    "min_disk_gb": 2,
+    "ports": [7878],
+    "notes": [
+      "Requires a download client (transmission, qbittorrent, etc.)",
+      "Configure indexers via Prowlarr or manually"
+    ]
+  },
+  "tags": ["automation", "movies", "download", "arr"],
+  "created_at": "2025-12-04T22:00:00Z",
+  "updated_at": "2025-12-04T22:00:00Z"
+}

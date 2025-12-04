@@ -1,0 +1,32 @@
+{
+  "id": "media-stack-complete",
+  "name": "Complete Media Stack",
+  "description": "All-in-one media solution: Plex + Sonarr + Radarr + Prowlarr + Transmission. Perfect for beginners.",
+  "icon": "🎯",
+  "category": "media",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "MEDIA_PATH": "/mnt/media",
+    "DOWNLOADS_PATH": "/mnt/downloads",
+    "CONFIG_BASE": "/var/lib/stumpfworks",
+    "PUID": "1000",
+    "PGID": "1000",
+    "TZ": "Europe/Berlin"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  plex:\n    image: lscr.io/linuxserver/plex:latest\n    container_name: plex\n    network_mode: host\n    environment:\n      - PUID={{PUID}}\n      - PGID={{PGID}}\n      - TZ={{TZ}}\n      - VERSION=docker\n    volumes:\n      - {{CONFIG_BASE}}/plex/config:/config\n      - {{CONFIG_BASE}}/plex/transcode:/transcode\n      - {{MEDIA_PATH}}:/media\n    devices:\n      - /dev/dri:/dev/dri\n    restart: unless-stopped\n\n  sonarr:\n    image: lscr.io/linuxserver/sonarr:latest\n    container_name: sonarr\n    environment:\n      - PUID={{PUID}}\n      - PGID={{PGID}}\n      - TZ={{TZ}}\n    volumes:\n      - {{CONFIG_BASE}}/sonarr:/config\n      - {{MEDIA_PATH}}/tv:/tv\n      - {{DOWNLOADS_PATH}}:/downloads\n    ports:\n      - 8989:8989\n    restart: unless-stopped\n\n  radarr:\n    image: lscr.io/linuxserver/radarr:latest\n    container_name: radarr\n    environment:\n      - PUID={{PUID}}\n      - PGID={{PGID}}\n      - TZ={{TZ}}\n    volumes:\n      - {{CONFIG_BASE}}/radarr:/config\n      - {{MEDIA_PATH}}/movies:/movies\n      - {{DOWNLOADS_PATH}}:/downloads\n    ports:\n      - 7878:7878\n    restart: unless-stopped\n\n  prowlarr:\n    image: lscr.io/linuxserver/prowlarr:latest\n    container_name: prowlarr\n    environment:\n      - PUID={{PUID}}\n      - PGID={{PGID}}\n      - TZ={{TZ}}\n    volumes:\n      - {{CONFIG_BASE}}/prowlarr:/config\n    ports:\n      - 9696:9696\n    restart: unless-stopped\n\n  transmission:\n    image: lscr.io/linuxserver/transmission:latest\n    container_name: transmission\n    environment:\n      - PUID={{PUID}}\n      - PGID={{PGID}}\n      - TZ={{TZ}}\n      - USER=admin\n      - PASS=changeme\n    volumes:\n      - {{CONFIG_BASE}}/transmission:/config\n      - {{DOWNLOADS_PATH}}:/downloads\n      - {{DOWNLOADS_PATH}}/watch:/watch\n    ports:\n      - 9091:9091\n      - 51413:51413\n      - 51413:51413/udp\n    restart: unless-stopped",
+  "requirements": {
+    "min_memory_mb": 4096,
+    "min_disk_gb": 20,
+    "ports": [32400, 8989, 7878, 9696, 9091, 51413],
+    "notes": [
+      "Complete media automation stack",
+      "Requires significant storage space for media",
+      "Plex runs in host network mode for better performance",
+      "Change Transmission password after deployment"
+    ]
+  },
+  "tags": ["media", "automation", "complete", "stack"],
+  "created_at": "2025-12-04T22:00:00Z",
+  "updated_at": "2025-12-04T22:00:00Z"
+}

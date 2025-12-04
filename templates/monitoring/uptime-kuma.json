@@ -1,0 +1,26 @@
+{
+  "id": "uptime-kuma",
+  "name": "Uptime Kuma",
+  "description": "Self-hosted monitoring tool. Monitor HTTP(s), TCP, DNS, Docker containers, and more with a beautiful UI.",
+  "icon": "⏱️",
+  "category": "monitoring",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/uptime-kuma/data"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  uptime-kuma:\n    image: louislam/uptime-kuma:latest\n    container_name: uptime-kuma\n    ports:\n      - 3001:3001\n    volumes:\n      - {{DATA_PATH}}:/app/data\n      - /var/run/docker.sock:/var/run/docker.sock:ro\n    restart: unless-stopped\n    labels:\n      - \"com.stumpfworks.app=uptime-kuma\"\n      - \"com.stumpfworks.category=monitoring\"",
+  "requirements": {
+    "min_memory_mb": 256,
+    "min_disk_gb": 1,
+    "ports": [3001],
+    "notes": [
+      "Web UI available at http://your-ip:3001",
+      "Supports multiple notification channels (Discord, Telegram, Email, etc.)",
+      "Can monitor Docker containers if socket is mounted"
+    ]
+  },
+  "tags": ["monitoring", "uptime", "alerts", "notifications"],
+  "created_at": "2025-12-04T23:00:00Z",
+  "updated_at": "2025-12-04T23:00:00Z"
+}

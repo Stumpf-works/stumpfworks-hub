@@ -1,11 +1,11 @@
 #!/bin/bash
 # Stumpfworks Hub Deployment Script
 # Usage: ./deploy.sh [server]
-# Example: ./deploy.sh apt.stumpfworks.de
+# Example: ./deploy.sh 46.4.25.15
 
 set -e
 
-SERVER=${1:-apt.stumpfworks.de}
+SERVER=${1:-46.4.25.15}
 HUB_DIR="/opt/stumpfworks-hub"
 DATA_DIR="/var/lib/stumpfworks-hub"
 LOG_DIR="/var/log/stumpfworks-hub"
