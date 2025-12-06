@@ -1,0 +1,31 @@
+{
+  "id": "mariadb",
+  "name": "MariaDB",
+  "description": "Drop-in MySQL replacement with enhanced performance and additional features.",
+  "icon": "🗄️",
+  "category": "database",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/mariadb",
+    "MYSQL_ROOT_PASSWORD": "changeme",
+    "MYSQL_DATABASE": "mydb",
+    "MYSQL_USER": "user",
+    "MYSQL_PASSWORD": "changeme",
+    "PORT": "3306"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  mariadb:\n    image: mariadb:latest\n    container_name: mariadb\n    restart: unless-stopped\n    environment:\n      - MYSQL_ROOT_PASSWORD={{MYSQL_ROOT_PASSWORD}}\n      - MYSQL_DATABASE={{MYSQL_DATABASE}}\n      - MYSQL_USER={{MYSQL_USER}}\n      - MYSQL_PASSWORD={{MYSQL_PASSWORD}}\n    ports:\n      - \"{{PORT}}:3306\"\n    volumes:\n      - {{DATA_PATH}}:/var/lib/mysql\n    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci\n    labels:\n      - \"com.stumpfworks.app=mariadb\"\n      - \"com.stumpfworks.category=database\"",
+  "requirements": {
+    "min_memory_mb": 512,
+    "min_disk_gb": 5,
+    "ports": [3306],
+    "notes": [
+      "MySQL compatible, can be used as a drop-in replacement",
+      "Change default passwords before production use",
+      "phpMyAdmin can be used for web-based management"
+    ]
+  },
+  "tags": ["database", "mariadb", "mysql", "sql", "relational"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

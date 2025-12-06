@@ -1,0 +1,31 @@
+{
+  "id": "traefik",
+  "name": "Traefik",
+  "description": "Modern reverse proxy and load balancer with automatic service discovery and SSL.",
+  "icon": "🚦",
+  "category": "web",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "CONFIG_PATH": "/var/lib/stumpfworks/traefik",
+    "LETSENCRYPT_EMAIL": "admin@example.com",
+    "HTTP_PORT": "80",
+    "HTTPS_PORT": "443",
+    "DASHBOARD_PORT": "8080"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  traefik:\n    image: traefik:latest\n    container_name: traefik\n    restart: unless-stopped\n    command:\n      - --api.dashboard=true\n      - --providers.docker=true\n      - --providers.docker.exposedbydefault=false\n      - --entrypoints.web.address=:80\n      - --entrypoints.websecure.address=:443\n      - --certificatesresolvers.letsencrypt.acme.email={{LETSENCRYPT_EMAIL}}\n      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json\n      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web\n    ports:\n      - \"{{HTTP_PORT}}:80\"\n      - \"{{HTTPS_PORT}}:443\"\n      - \"{{DASHBOARD_PORT}}:8080\"\n    volumes:\n      - /var/run/docker.sock:/var/run/docker.sock:ro\n      - {{CONFIG_PATH}}/letsencrypt:/letsencrypt\n    labels:\n      - \"com.stumpfworks.app=traefik\"\n      - \"com.stumpfworks.category=web\"",
+  "requirements": {
+    "min_memory_mb": 256,
+    "min_disk_gb": 1,
+    "ports": [80, 443, 8080],
+    "notes": [
+      "Dashboard available at http://your-ip:8080",
+      "Automatic service discovery for Docker containers",
+      "Configure DNS entries to point to your server",
+      "Update LETSENCRYPT_EMAIL before production use"
+    ]
+  },
+  "tags": ["proxy", "traefik", "reverse-proxy", "load-balancer", "ssl"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

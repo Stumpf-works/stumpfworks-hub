@@ -1,0 +1,30 @@
+{
+  "id": "postgresql",
+  "name": "PostgreSQL",
+  "description": "Advanced open-source relational database with powerful features and excellent performance.",
+  "icon": "🐘",
+  "category": "database",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/postgresql/data",
+    "POSTGRES_USER": "admin",
+    "POSTGRES_PASSWORD": "changeme",
+    "POSTGRES_DB": "mydb",
+    "PORT": "5432"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  postgresql:\n    image: postgres:16-alpine\n    container_name: postgresql\n    restart: unless-stopped\n    environment:\n      - POSTGRES_USER={{POSTGRES_USER}}\n      - POSTGRES_PASSWORD={{POSTGRES_PASSWORD}}\n      - POSTGRES_DB={{POSTGRES_DB}}\n      - PGDATA=/var/lib/postgresql/data/pgdata\n    ports:\n      - \"{{PORT}}:5432\"\n    volumes:\n      - {{DATA_PATH}}:/var/lib/postgresql/data\n    labels:\n      - \"com.stumpfworks.app=postgresql\"\n      - \"com.stumpfworks.category=database\"",
+  "requirements": {
+    "min_memory_mb": 512,
+    "min_disk_gb": 5,
+    "ports": [5432],
+    "notes": [
+      "Change default password before production use",
+      "Connect using: psql -h localhost -U admin -d mydb",
+      "Consider using pgAdmin for web-based management"
+    ]
+  },
+  "tags": ["database", "postgresql", "sql", "relational"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

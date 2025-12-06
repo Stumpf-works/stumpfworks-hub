@@ -1,0 +1,30 @@
+{
+  "id": "gitlab",
+  "name": "GitLab CE",
+  "description": "Self-hosted Git repository manager with CI/CD, issue tracking, and more.",
+  "icon": "🦊",
+  "category": "development",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "GITLAB_HOME": "/var/lib/stumpfworks/gitlab",
+    "GITLAB_HOSTNAME": "gitlab.example.com",
+    "GITLAB_SSH_PORT": "2222",
+    "GITLAB_HTTP_PORT": "8080",
+    "GITLAB_HTTPS_PORT": "8443"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  gitlab:\n    image: gitlab/gitlab-ce:latest\n    container_name: gitlab\n    restart: unless-stopped\n    hostname: '{{GITLAB_HOSTNAME}}'\n    environment:\n      GITLAB_OMNIBUS_CONFIG: |\n        external_url 'http://{{GITLAB_HOSTNAME}}'\n        gitlab_rails['gitlab_shell_ssh_port'] = {{GITLAB_SSH_PORT}}\n    ports:\n      - '{{GITLAB_HTTP_PORT}}:80'\n      - '{{GITLAB_HTTPS_PORT}}:443'\n      - '{{GITLAB_SSH_PORT}}:22'\n    volumes:\n      - '{{GITLAB_HOME}}/config:/etc/gitlab'\n      - '{{GITLAB_HOME}}/logs:/var/log/gitlab'\n      - '{{GITLAB_HOME}}/data:/var/opt/gitlab'\n    shm_size: '256m'\n    labels:\n      - \"com.stumpfworks.app=gitlab\"\n      - \"com.stumpfworks.category=development\"",
+  "requirements": {
+    "min_memory_mb": 4096,
+    "min_disk_gb": 10,
+    "ports": [8080, 8443, 2222],
+    "notes": [
+      "GitLab requires at least 4GB RAM for optimal performance",
+      "Initial setup can take several minutes",
+      "Default admin credentials will be created on first start"
+    ]
+  },
+  "tags": ["git", "cicd", "gitlab", "development", "repository"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

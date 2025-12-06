@@ -1,0 +1,31 @@
+{
+  "id": "vaultwarden",
+  "name": "Vaultwarden",
+  "description": "Lightweight Bitwarden server implementation. Self-hosted password manager.",
+  "icon": "🔐",
+  "category": "security",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/vaultwarden",
+    "PORT": "8080",
+    "ADMIN_TOKEN": "changeme_generate_random_token",
+    "DOMAIN": "https://vault.example.com"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  vaultwarden:\n    image: vaultwarden/server:latest\n    container_name: vaultwarden\n    restart: unless-stopped\n    environment:\n      - DOMAIN={{DOMAIN}}\n      - ADMIN_TOKEN={{ADMIN_TOKEN}}\n      - SIGNUPS_ALLOWED=true\n      - INVITATIONS_ALLOWED=true\n      - WEBSOCKET_ENABLED=true\n    ports:\n      - \"{{PORT}}:80\"\n    volumes:\n      - {{DATA_PATH}}:/data\n    labels:\n      - \"com.stumpfworks.app=vaultwarden\"\n      - \"com.stumpfworks.category=security\"",
+  "requirements": {
+    "min_memory_mb": 256,
+    "min_disk_gb": 1,
+    "ports": [8080],
+    "notes": [
+      "Compatible with Bitwarden clients",
+      "Generate a strong admin token before deployment",
+      "Use behind a reverse proxy with HTTPS",
+      "Admin panel at /admin with admin token",
+      "Disable signups after creating accounts"
+    ]
+  },
+  "tags": ["password-manager", "vaultwarden", "bitwarden", "security"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

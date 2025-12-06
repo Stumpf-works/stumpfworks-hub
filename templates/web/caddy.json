@@ -1,0 +1,31 @@
+{
+  "id": "caddy",
+  "name": "Caddy",
+  "description": "Web server with automatic HTTPS that's easy to configure and deploy.",
+  "icon": "🎯",
+  "category": "web",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "CONFIG_PATH": "/var/lib/stumpfworks/caddy/config",
+    "DATA_PATH": "/var/lib/stumpfworks/caddy/data",
+    "SITE_PATH": "/var/lib/stumpfworks/caddy/site",
+    "HTTP_PORT": "80",
+    "HTTPS_PORT": "443"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  caddy:\n    image: caddy:latest\n    container_name: caddy\n    restart: unless-stopped\n    ports:\n      - \"{{HTTP_PORT}}:80\"\n      - \"{{HTTPS_PORT}}:443\"\n    volumes:\n      - {{CONFIG_PATH}}:/config\n      - {{DATA_PATH}}:/data\n      - {{SITE_PATH}}:/usr/share/caddy\n    labels:\n      - \"com.stumpfworks.app=caddy\"\n      - \"com.stumpfworks.category=web\"",
+  "requirements": {
+    "min_memory_mb": 128,
+    "min_disk_gb": 1,
+    "ports": [80, 443],
+    "notes": [
+      "Automatic HTTPS with Let's Encrypt",
+      "Place your website files in the site directory",
+      "Configure via Caddyfile in config directory",
+      "Very low resource usage"
+    ]
+  },
+  "tags": ["web-server", "caddy", "https", "reverse-proxy", "ssl"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

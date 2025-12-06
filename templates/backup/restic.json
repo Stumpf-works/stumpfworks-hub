@@ -1,0 +1,31 @@
+{
+  "id": "restic",
+  "name": "Restic REST Server",
+  "description": "Fast, secure backup server for Restic. Efficient deduplication and encryption.",
+  "icon": "🗄️",
+  "category": "backup",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/restic/data",
+    "PORT": "8000",
+    "USERNAME": "admin",
+    "PASSWORD": "changeme"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  restic:\n    image: restic/rest-server:latest\n    container_name: restic-server\n    restart: unless-stopped\n    command:\n      - --path\n      - /data\n    ports:\n      - \"{{PORT}}:8000\"\n    volumes:\n      - {{DATA_PATH}}:/data\n    environment:\n      - OPTIONS=--append-only\n    labels:\n      - \"com.stumpfworks.app=restic\"\n      - \"com.stumpfworks.category=backup\"",
+  "requirements": {
+    "min_memory_mb": 256,
+    "min_disk_gb": 10,
+    "ports": [8000],
+    "notes": [
+      "REST server for Restic backups",
+      "Use restic CLI to connect: restic -r rest:http://your-ip:8000/",
+      "Append-only mode prevents backup deletion",
+      "Very efficient with deduplication",
+      "Backups are encrypted by Restic client"
+    ]
+  },
+  "tags": ["backup", "restic", "deduplication", "encryption"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

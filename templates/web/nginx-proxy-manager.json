@@ -1,0 +1,31 @@
+{
+  "id": "nginx-proxy-manager",
+  "name": "Nginx Proxy Manager",
+  "description": "Easy-to-use reverse proxy with SSL certificate management and web interface.",
+  "icon": "🔀",
+  "category": "web",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/nginx-proxy-manager/data",
+    "LETSENCRYPT_PATH": "/var/lib/stumpfworks/nginx-proxy-manager/letsencrypt",
+    "HTTP_PORT": "80",
+    "HTTPS_PORT": "443",
+    "ADMIN_PORT": "81"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  nginx-proxy-manager:\n    image: jc21/nginx-proxy-manager:latest\n    container_name: nginx-proxy-manager\n    restart: unless-stopped\n    ports:\n      - '{{HTTP_PORT}}:80'\n      - '{{HTTPS_PORT}}:443'\n      - '{{ADMIN_PORT}}:81'\n    volumes:\n      - {{DATA_PATH}}:/data\n      - {{LETSENCRYPT_PATH}}:/etc/letsencrypt\n    labels:\n      - \"com.stumpfworks.app=nginx-proxy-manager\"\n      - \"com.stumpfworks.category=web\"",
+  "requirements": {
+    "min_memory_mb": 512,
+    "min_disk_gb": 2,
+    "ports": [80, 443, 81],
+    "notes": [
+      "Admin interface at http://your-ip:81",
+      "Default login: admin@example.com / changeme",
+      "Change credentials after first login",
+      "Automatic SSL certificates via Let's Encrypt"
+    ]
+  },
+  "tags": ["proxy", "nginx", "reverse-proxy", "ssl", "letsencrypt"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

@@ -1,0 +1,32 @@
+{
+  "id": "matrix-synapse",
+  "name": "Matrix Synapse",
+  "description": "Self-hosted Matrix homeserver for secure, decentralized communication.",
+  "icon": "💬",
+  "category": "communication",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/matrix/data",
+    "DB_PATH": "/var/lib/stumpfworks/matrix/db",
+    "SERVER_NAME": "matrix.example.com",
+    "PORT": "8008",
+    "POSTGRES_PASSWORD": "changeme"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  db:\n    image: postgres:16-alpine\n    container_name: matrix-db\n    restart: unless-stopped\n    environment:\n      - POSTGRES_USER=synapse\n      - POSTGRES_PASSWORD={{POSTGRES_PASSWORD}}\n      - POSTGRES_DB=synapse\n      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C\n    volumes:\n      - {{DB_PATH}}:/var/lib/postgresql/data\n    labels:\n      - \"com.stumpfworks.app=matrix-synapse\"\n      - \"com.stumpfworks.category=communication\"\n\n  synapse:\n    image: matrixdotorg/synapse:latest\n    container_name: matrix-synapse\n    restart: unless-stopped\n    ports:\n      - \"{{PORT}}:8008\"\n    volumes:\n      - {{DATA_PATH}}:/data\n    environment:\n      - SYNAPSE_SERVER_NAME={{SERVER_NAME}}\n      - SYNAPSE_REPORT_STATS=no\n    depends_on:\n      - db\n    labels:\n      - \"com.stumpfworks.app=matrix-synapse\"\n      - \"com.stumpfworks.category=communication\"",
+  "requirements": {
+    "min_memory_mb": 2048,
+    "min_disk_gb": 10,
+    "ports": [8008],
+    "notes": [
+      "Generate config on first run",
+      "Use Element web client to connect",
+      "Federation requires proper DNS setup",
+      "Server name should be your domain",
+      "Consider using reverse proxy with SSL"
+    ]
+  },
+  "tags": ["chat", "matrix", "communication", "messaging", "decentralized"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

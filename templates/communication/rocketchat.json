@@ -1,0 +1,33 @@
+{
+  "id": "rocketchat",
+  "name": "Rocket.Chat",
+  "description": "Open-source team communication platform. Self-hosted Slack alternative.",
+  "icon": "🚀",
+  "category": "communication",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/rocketchat/data",
+    "UPLOADS_PATH": "/var/lib/stumpfworks/rocketchat/uploads",
+    "MONGO_PATH": "/var/lib/stumpfworks/rocketchat/mongo",
+    "PORT": "3000",
+    "ROOT_URL": "http://localhost:3000",
+    "MONGO_OPLOG_URL": "mongodb://mongo:27017/local?replicaSet=rs0"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  mongo:\n    image: mongo:6\n    container_name: rocketchat-mongo\n    restart: unless-stopped\n    command: mongod --oplogSize 128 --replSet rs0\n    volumes:\n      - {{MONGO_PATH}}:/data/db\n    labels:\n      - \"com.stumpfworks.app=rocketchat\"\n      - \"com.stumpfworks.category=communication\"\n\n  mongo-init-replica:\n    image: mongo:6\n    container_name: rocketchat-mongo-init\n    command: >\n      bash -c\n        \"for i in `seq 1 30`; do\n          mongosh mongo/rocketchat --eval \\\"rs.initiate({ _id: 'rs0', members: [ { _id: 0, host: 'mongo:27017' } ]})\\\" &&\n          s=$$? && break || s=$$?;\n          echo \\\"Tried $$i times. Waiting 5 secs...\\\";\n          sleep 5;\n        done; (exit $$s)\"\n    depends_on:\n      - mongo\n    labels:\n      - \"com.stumpfworks.app=rocketchat\"\n      - \"com.stumpfworks.category=communication\"\n\n  rocketchat:\n    image: registry.rocket.chat/rocketchat/rocket.chat:latest\n    container_name: rocketchat\n    restart: unless-stopped\n    environment:\n      - MONGO_URL=mongodb://mongo:27017/rocketchat?replicaSet=rs0\n      - MONGO_OPLOG_URL={{MONGO_OPLOG_URL}}\n      - ROOT_URL={{ROOT_URL}}\n      - PORT=3000\n    ports:\n      - \"{{PORT}}:3000\"\n    volumes:\n      - {{UPLOADS_PATH}}:/app/uploads\n    depends_on:\n      - mongo\n    labels:\n      - \"com.stumpfworks.app=rocketchat\"\n      - \"com.stumpfworks.category=communication\"",
+  "requirements": {
+    "min_memory_mb": 2048,
+    "min_disk_gb": 10,
+    "ports": [3000],
+    "notes": [
+      "Web interface at http://your-ip:3000",
+      "Create admin account on first access",
+      "Mobile apps available for iOS and Android",
+      "Supports integrations, bots, and webhooks",
+      "Great Slack alternative for teams"
+    ]
+  },
+  "tags": ["chat", "team", "communication", "rocketchat", "slack-alternative"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

@@ -1,0 +1,31 @@
+{
+  "id": "grafana",
+  "name": "Grafana",
+  "description": "Analytics and interactive visualization platform. Beautiful dashboards for metrics.",
+  "icon": "📊",
+  "category": "monitoring",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/grafana",
+    "PORT": "3000",
+    "GF_SECURITY_ADMIN_PASSWORD": "changeme",
+    "GF_INSTALL_PLUGINS": ""
+  },
+  "compose": "version: '3.8'\n\nservices:\n  grafana:\n    image: grafana/grafana:latest\n    container_name: grafana\n    restart: unless-stopped\n    ports:\n      - \"{{PORT}}:3000\"\n    environment:\n      - GF_SECURITY_ADMIN_PASSWORD={{GF_SECURITY_ADMIN_PASSWORD}}\n      - GF_INSTALL_PLUGINS={{GF_INSTALL_PLUGINS}}\n      - GF_SERVER_ROOT_URL=http://localhost:{{PORT}}\n    volumes:\n      - {{DATA_PATH}}:/var/lib/grafana\n    user: \"472\"\n    labels:\n      - \"com.stumpfworks.app=grafana\"\n      - \"com.stumpfworks.category=monitoring\"",
+  "requirements": {
+    "min_memory_mb": 512,
+    "min_disk_gb": 2,
+    "ports": [3000],
+    "notes": [
+      "Web interface at http://your-ip:3000",
+      "Default username: admin",
+      "Change admin password on first login",
+      "Add data sources like Prometheus, InfluxDB, etc.",
+      "Import pre-built dashboards from grafana.com"
+    ]
+  },
+  "tags": ["monitoring", "grafana", "visualization", "dashboards", "metrics"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

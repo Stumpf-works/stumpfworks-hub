@@ -1,0 +1,30 @@
+{
+  "id": "redis",
+  "name": "Redis",
+  "description": "In-memory data structure store. Fast caching, session storage, and message broker.",
+  "icon": "⚡",
+  "category": "database",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/redis",
+    "PORT": "6379",
+    "REDIS_PASSWORD": ""
+  },
+  "compose": "version: '3.8'\n\nservices:\n  redis:\n    image: redis:alpine\n    container_name: redis\n    restart: unless-stopped\n    command: redis-server --appendonly yes {{REDIS_PASSWORD}}\n    ports:\n      - \"{{PORT}}:6379\"\n    volumes:\n      - {{DATA_PATH}}:/data\n    labels:\n      - \"com.stumpfworks.app=redis\"\n      - \"com.stumpfworks.category=database\"",
+  "requirements": {
+    "min_memory_mb": 256,
+    "min_disk_gb": 1,
+    "ports": [6379],
+    "notes": [
+      "In-memory database, very fast",
+      "Perfect for caching and sessions",
+      "Persistence enabled with append-only file",
+      "Add --requirepass yourpassword for password protection",
+      "Use Redis Commander for GUI management"
+    ]
+  },
+  "tags": ["database", "redis", "cache", "in-memory", "nosql"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

@@ -1,0 +1,30 @@
+{
+  "id": "gitea",
+  "name": "Gitea",
+  "description": "Lightweight, self-hosted Git service written in Go. Minimal resource requirements.",
+  "icon": "🍵",
+  "category": "development",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/gitea",
+    "GITEA_PORT": "3000",
+    "GITEA_SSH_PORT": "2222",
+    "USER_UID": "1000",
+    "USER_GID": "1000"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  gitea:\n    image: gitea/gitea:latest\n    container_name: gitea\n    restart: unless-stopped\n    environment:\n      - USER_UID={{USER_UID}}\n      - USER_GID={{USER_GID}}\n      - GITEA__database__DB_TYPE=sqlite3\n      - GITEA__server__DOMAIN=localhost\n      - GITEA__server__ROOT_URL=http://localhost:{{GITEA_PORT}}\n    ports:\n      - \"{{GITEA_PORT}}:3000\"\n      - \"{{GITEA_SSH_PORT}}:22\"\n    volumes:\n      - {{DATA_PATH}}:/data\n      - /etc/timezone:/etc/timezone:ro\n      - /etc/localtime:/etc/localtime:ro\n    labels:\n      - \"com.stumpfworks.app=gitea\"\n      - \"com.stumpfworks.category=development\"",
+  "requirements": {
+    "min_memory_mb": 512,
+    "min_disk_gb": 5,
+    "ports": [3000, 2222],
+    "notes": [
+      "Much lighter than GitLab, perfect for small teams",
+      "Web interface available at http://your-ip:3000",
+      "First user registered becomes the admin"
+    ]
+  },
+  "tags": ["git", "gitea", "development", "repository", "lightweight"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

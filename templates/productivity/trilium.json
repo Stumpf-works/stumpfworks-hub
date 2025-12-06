@@ -1,0 +1,29 @@
+{
+  "id": "trilium",
+  "name": "Trilium Notes",
+  "description": "Hierarchical note-taking application focused on building large personal knowledge bases.",
+  "icon": "📝",
+  "category": "productivity",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/trilium",
+    "PORT": "8080"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  trilium:\n    image: zadam/trilium:latest\n    container_name: trilium\n    restart: unless-stopped\n    environment:\n      - TRILIUM_DATA_DIR=/home/node/trilium-data\n    ports:\n      - \"{{PORT}}:8080\"\n    volumes:\n      - {{DATA_PATH}}:/home/node/trilium-data\n    labels:\n      - \"com.stumpfworks.app=trilium\"\n      - \"com.stumpfworks.category=productivity\"",
+  "requirements": {
+    "min_memory_mb": 512,
+    "min_disk_gb": 2,
+    "ports": [8080],
+    "notes": [
+      "Web interface at http://your-ip:8080",
+      "First access will create initial setup",
+      "Supports markdown, code blocks, and diagrams",
+      "Desktop clients available for sync",
+      "Perfect for personal knowledge management"
+    ]
+  },
+  "tags": ["notes", "knowledge-base", "trilium", "markdown", "wiki"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

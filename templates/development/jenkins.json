@@ -1,0 +1,28 @@
+{
+  "id": "jenkins",
+  "name": "Jenkins",
+  "description": "Leading open-source automation server for CI/CD pipelines.",
+  "icon": "🔧",
+  "category": "development",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "JENKINS_HOME": "/var/lib/stumpfworks/jenkins",
+    "PORT": "8080",
+    "AGENT_PORT": "50000"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  jenkins:\n    image: jenkins/jenkins:lts\n    container_name: jenkins\n    restart: unless-stopped\n    user: root\n    ports:\n      - \"{{PORT}}:8080\"\n      - \"{{AGENT_PORT}}:50000\"\n    volumes:\n      - {{JENKINS_HOME}}:/var/jenkins_home\n      - /var/run/docker.sock:/var/run/docker.sock\n    environment:\n      - JENKINS_OPTS=--prefix=/jenkins\n    labels:\n      - \"com.stumpfworks.app=jenkins\"\n      - \"com.stumpfworks.category=development\"",
+  "requirements": {
+    "min_memory_mb": 2048,
+    "min_disk_gb": 10,
+    "ports": [8080, 50000],
+    "notes": [
+      "Initial admin password can be found in logs or jenkins_home/secrets/initialAdminPassword",
+      "Web interface available at http://your-ip:8080",
+      "Docker socket mounted for building Docker images"
+    ]
+  },
+  "tags": ["cicd", "jenkins", "automation", "development", "pipeline"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

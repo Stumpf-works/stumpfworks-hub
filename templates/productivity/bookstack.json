@@ -1,0 +1,31 @@
+{
+  "id": "bookstack",
+  "name": "BookStack",
+  "description": "Simple, self-hosted platform for organizing and storing information. Perfect wiki alternative.",
+  "icon": "📚",
+  "category": "productivity",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/bookstack",
+    "DB_PATH": "/var/lib/stumpfworks/bookstack/db",
+    "PORT": "8080",
+    "DB_PASSWORD": "changeme",
+    "APP_URL": "http://localhost:8080"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  db:\n    image: mariadb:latest\n    container_name: bookstack-db\n    restart: unless-stopped\n    environment:\n      - MYSQL_ROOT_PASSWORD={{DB_PASSWORD}}\n      - MYSQL_DATABASE=bookstack\n      - MYSQL_USER=bookstack\n      - MYSQL_PASSWORD={{DB_PASSWORD}}\n    volumes:\n      - {{DB_PATH}}:/var/lib/mysql\n    labels:\n      - \"com.stumpfworks.app=bookstack\"\n      - \"com.stumpfworks.category=productivity\"\n\n  bookstack:\n    image: lscr.io/linuxserver/bookstack:latest\n    container_name: bookstack\n    restart: unless-stopped\n    environment:\n      - PUID=1000\n      - PGID=1000\n      - APP_URL={{APP_URL}}\n      - DB_HOST=db\n      - DB_USER=bookstack\n      - DB_PASS={{DB_PASSWORD}}\n      - DB_DATABASE=bookstack\n    ports:\n      - \"{{PORT}}:80\"\n    volumes:\n      - {{DATA_PATH}}:/config\n    depends_on:\n      - db\n    labels:\n      - \"com.stumpfworks.app=bookstack\"\n      - \"com.stumpfworks.category=productivity\"",
+  "requirements": {
+    "min_memory_mb": 512,
+    "min_disk_gb": 2,
+    "ports": [8080],
+    "notes": [
+      "Default login: admin@admin.com / password",
+      "Change credentials immediately after first login",
+      "Great for documentation, notes, and wikis",
+      "Web interface at http://your-ip:8080"
+    ]
+  },
+  "tags": ["wiki", "documentation", "notes", "bookstack", "knowledge-base"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}

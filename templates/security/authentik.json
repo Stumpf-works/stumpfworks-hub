@@ -1,0 +1,33 @@
+{
+  "id": "authentik",
+  "name": "Authentik",
+  "description": "Open-source Identity Provider with SSO, OAuth2, SAML, and LDAP support.",
+  "icon": "🛡️",
+  "category": "security",
+  "author": "StumpfWorks",
+  "version": "1.0.0",
+  "variables": {
+    "DATA_PATH": "/var/lib/stumpfworks/authentik",
+    "PORT": "9000",
+    "HTTPS_PORT": "9443",
+    "POSTGRES_PASSWORD": "changeme",
+    "AUTHENTIK_SECRET_KEY": "changeme_generate_random_key",
+    "AUTHENTIK_ERROR_REPORTING": "false"
+  },
+  "compose": "version: '3.8'\n\nservices:\n  postgresql:\n    image: postgres:16-alpine\n    container_name: authentik-db\n    restart: unless-stopped\n    environment:\n      - POSTGRES_PASSWORD={{POSTGRES_PASSWORD}}\n      - POSTGRES_USER=authentik\n      - POSTGRES_DB=authentik\n    volumes:\n      - {{DATA_PATH}}/database:/var/lib/postgresql/data\n    labels:\n      - \"com.stumpfworks.app=authentik\"\n      - \"com.stumpfworks.category=security\"\n\n  redis:\n    image: redis:alpine\n    container_name: authentik-redis\n    restart: unless-stopped\n    labels:\n      - \"com.stumpfworks.app=authentik\"\n      - \"com.stumpfworks.category=security\"\n\n  server:\n    image: ghcr.io/goauthentik/server:latest\n    container_name: authentik-server\n    restart: unless-stopped\n    command: server\n    environment:\n      - AUTHENTIK_REDIS__HOST=redis\n      - AUTHENTIK_POSTGRESQL__HOST=postgresql\n      - AUTHENTIK_POSTGRESQL__USER=authentik\n      - AUTHENTIK_POSTGRESQL__NAME=authentik\n      - AUTHENTIK_POSTGRESQL__PASSWORD={{POSTGRES_PASSWORD}}\n      - AUTHENTIK_SECRET_KEY={{AUTHENTIK_SECRET_KEY}}\n      - AUTHENTIK_ERROR_REPORTING__ENABLED={{AUTHENTIK_ERROR_REPORTING}}\n    ports:\n      - \"{{PORT}}:9000\"\n      - \"{{HTTPS_PORT}}:9443\"\n    volumes:\n      - {{DATA_PATH}}/media:/media\n      - {{DATA_PATH}}/custom-templates:/templates\n    depends_on:\n      - postgresql\n      - redis\n    labels:\n      - \"com.stumpfworks.app=authentik\"\n      - \"com.stumpfworks.category=security\"\n\n  worker:\n    image: ghcr.io/goauthentik/server:latest\n    container_name: authentik-worker\n    restart: unless-stopped\n    command: worker\n    environment:\n      - AUTHENTIK_REDIS__HOST=redis\n      - AUTHENTIK_POSTGRESQL__HOST=postgresql\n      - AUTHENTIK_POSTGRESQL__USER=authentik\n      - AUTHENTIK_POSTGRESQL__NAME=authentik\n      - AUTHENTIK_POSTGRESQL__PASSWORD={{POSTGRES_PASSWORD}}\n      - AUTHENTIK_SECRET_KEY={{AUTHENTIK_SECRET_KEY}}\n      - AUTHENTIK_ERROR_REPORTING__ENABLED={{AUTHENTIK_ERROR_REPORTING}}\n    volumes:\n      - {{DATA_PATH}}/media:/media\n      - {{DATA_PATH}}/certs:/certs\n      - {{DATA_PATH}}/custom-templates:/templates\n    depends_on:\n      - postgresql\n      - redis\n    labels:\n      - \"com.stumpfworks.app=authentik\"\n      - \"com.stumpfworks.category=security\"",
+  "requirements": {
+    "min_memory_mb": 2048,
+    "min_disk_gb": 5,
+    "ports": [9000, 9443],
+    "notes": [
+      "Web interface at http://your-ip:9000",
+      "Generate strong secret key before deployment",
+      "Initial setup wizard on first access",
+      "Supports OAuth2, SAML, LDAP, and more",
+      "Can be used for SSO across multiple applications"
+    ]
+  },
+  "tags": ["authentication", "sso", "oauth2", "saml", "ldap", "identity-provider"],
+  "created_at": "2025-12-06T12:00:00Z",
+  "updated_at": "2025-12-06T12:00:00Z"
+}
